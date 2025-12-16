@@ -1,0 +1,1118 @@
+// Variables
+$primary-color: #1976d2;
+$primary-dark: #1565c0;
+$success-color: #4caf50;
+$error-color: #f44336;
+$warning-color: #ff9800;
+$text-primary: #374151;
+$text-secondary: #757575;
+$border-color: #e0e0e0;
+$background-light: #f8f9fa;
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+$shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+// Animaciones
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+.attendance-container {
+  padding: 32px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.attendance-header {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeInUp 0.6s ease-out;
+  
+  h1 {
+    color: $text-primary;
+    margin: 0 0 12px 0;
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: -0.5px;
+  }
+  
+  p {
+    color: $text-secondary;
+    font-size: 16px;
+    margin: 0;
+    font-weight: 400;
+  }
+}
+
+.attendance-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: $shadow-md;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    box-shadow: $shadow-lg;
+    transform: translateY(-2px);
+  }
+}
+
+.animate-in {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.search-card, .student-card, .list-card {
+  border-radius: 16px !important;
+  overflow: hidden;
+  
+  mat-card-content {
+    padding: 32px !important;
+  }
+}
+
+.card-title-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid $border-color;
+  
+  &.success {
+    border-bottom-color: $success-color;
+    
+    .title-icon {
+      background: linear-gradient(135deg, $success-color 0%, #45a049 100%);
+    }
+  }
+  
+  .title-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: $shadow-sm;
+    flex-shrink: 0;
+    
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      color: white;
+    }
+  }
+  
+  .title-text {
+    flex: 1;
+    
+    h2 {
+      margin: 0 0 4px 0;
+      font-size: 24px;
+      font-weight: 600;
+      color: $text-primary;
+      letter-spacing: -0.3px;
+    }
+    
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: $text-secondary;
+      line-height: 1.5;
+    }
+  }
+}
+
+.search-form {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  
+  .input-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .input-hint {
+    font-size: 12px;
+    color: $text-secondary;
+    padding-left: 12px;
+    margin-top: -8px;
+    width: 100%;
+  }
+  
+  .modern-input {
+    ::ng-deep {
+      .mat-form-field-outline {
+        border-radius: 12px;
+      }
+      
+      .mat-form-field-outline-thick {
+        color: $primary-color;
+      }
+      
+      .input-icon {
+        color: $primary-color;
+        margin-right: 8px;
+      }
+      
+      .mat-form-field-wrapper {
+        padding-bottom: 0;
+      }
+      
+      .mat-form-field-subscript-wrapper {
+        margin-top: 4px;
+        font-size: 11px;
+      }
+      
+      .mat-error {
+        font-size: 11px;
+      }
+    }
+  }
+  
+  .search-button {
+    min-width: 160px;
+    height: 56px;
+    border-radius: 12px !important;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: $shadow-sm;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    
+    &:hover:not([disabled]) {
+      box-shadow: $shadow-md;
+      transform: translateY(-2px);
+    }
+    
+    &[disabled] {
+      opacity: 0.6;
+    }
+    
+    .button-text {
+      white-space: nowrap;
+    }
+  }
+}
+
+.modern-button {
+  .button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .spinner {
+    display: inline-block;
+  }
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  background: linear-gradient(135deg, $error-color 0%, #d32f2f 100%);
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  box-shadow: $shadow-sm;
+  animation: slideDown 0.3s ease-out;
+  
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+  
+  span {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+}
+
+// Grid de información del estudiante
+.student-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.info-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: $background-light;
+  border-radius: 12px;
+  border-left: 4px solid $primary-color;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: white;
+    box-shadow: $shadow-sm;
+    transform: translateX(4px);
+  }
+  
+  &.highlight {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border-left-color: $primary-dark;
+    
+    .info-icon {
+      background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+      
+      mat-icon {
+        color: white;
+      }
+    }
+    
+    .info-value {
+      color: $primary-dark;
+      font-weight: 600;
+    }
+  }
+  
+  .info-icon {
+    width: 44px;
+    height: 44px;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: $shadow-sm;
+    
+    mat-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      color: $primary-color;
+    }
+  }
+  
+  .info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+    
+    .info-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: $text-secondary;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .info-value {
+      font-size: 15px;
+      color: $text-primary;
+      font-weight: 500;
+      word-break: break-word;
+      line-height: 1.4;
+      
+      &.time {
+        font-family: 'Roboto Mono', monospace;
+        font-weight: 600;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 2px solid $border-color;
+  
+  .cancel-button {
+    min-width: 200px;
+    height: 48px;
+    border-radius: 12px !important;
+    font-weight: 600;
+    border: 2px solid $border-color;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: $background-light;
+      border-color: $text-secondary;
+      transform: translateY(-2px);
+      box-shadow: $shadow-sm;
+    }
+    
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Sección de filtros
+.filters-section {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: $background-light;
+  border-radius: 12px;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  align-items: start;
+  
+  .filter-field {
+    width: 100%;
+    
+    ::ng-deep {
+      .mat-form-field-outline {
+        border-radius: 8px;
+      }
+    }
+  }
+  
+  .filter-actions {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    
+    button {
+      height: 56px;
+      border-radius: 8px !important;
+      font-weight: 600;
+      
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+// Tabla de asistencias
+.table-container {
+  margin-top: 20px;
+  overflow-x: auto;
+  border-radius: 12px;
+  background: white;
+  
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 20px;
+    
+    p {
+      color: $text-secondary;
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+  
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 16px;
+    
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: $text-secondary;
+      opacity: 0.5;
+    }
+    
+    p {
+      color: $text-secondary;
+      font-size: 16px;
+      margin: 0;
+    }
+  }
+}
+
+.attendance-table {
+  width: 100%;
+  background: white;
+  
+  th {
+    background: $background-light;
+    color: $text-primary;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 16px 20px;
+  }
+  
+  td {
+    padding: 16px 20px;
+    color: $text-primary;
+    font-size: 14px;
+    border-bottom: 1px solid $border-color;
+  }
+  
+  tr:hover {
+    background: $background-light;
+  }
+  
+  .role-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+    color: white;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+}
+
+.spinner {
+  ::ng-deep circle {
+    stroke: white;
+  }
+}
+
+::ng-deep {
+  .snackbar-success {
+    background: linear-gradient(135deg, $success-color 0%, #45a049 100%) !important;
+    color: white;
+    
+    .mat-simple-snackbar-action {
+      color: white;
+      font-weight: 600;
+    }
+  }
+  
+  .snackbar-error {
+    background: linear-gradient(135deg, $error-color 0%, #d32f2f 100%) !important;
+    color: white;
+    
+    .mat-simple-snackbar-action {
+      color: white;
+      font-weight: 600;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .attendance-container {
+    padding: 20px 16px;
+  }
+  
+  .attendance-header {
+    margin-bottom: 28px;
+    
+    h1 {
+      font-size: 26px;
+    }
+    
+    p {
+      font-size: 14px;
+    }
+  }
+  
+  .search-card, .student-card, .list-card {
+    mat-card-content {
+      padding: 24px !important;
+    }
+  }
+  
+  .card-title-section {
+    .title-icon {
+      width: 48px;
+      height: 48px;
+      
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+    
+    .title-text h2 {
+      font-size: 20px;
+    }
+  }
+  
+  .search-form {
+    flex-direction: column;
+    gap: 12px;
+    
+    .search-button {
+      width: 100%;
+      height: 52px;
+      min-width: auto;
+    }
+  }
+  
+  .student-info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filters-grid {
+    grid-template-columns: 1fr;
+    
+    .filter-actions {
+      flex-direction: column;
+      width: 100%;
+      
+      button {
+        width: 100%;
+      }
+    }
+  }
+  
+  .attendance-table {
+    th, td {
+      padding: 12px 16px;
+      font-size: 13px;
+    }
+  }
+  
+  .actions {
+    flex-direction: column;
+    
+    .cancel-button {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .attendance-container {
+    padding: 16px 12px;
+  }
+  
+  .search-card, .student-card, .list-card {
+    mat-card-content {
+      padding: 20px !important;
+    }
+  }
+  
+  .card-title-section {
+    gap: 12px;
+    padding-bottom: 16px;
+    
+    .title-icon {
+      width: 44px;
+      height: 44px;
+      
+      mat-icon {
+        font-size: 22px;
+        width: 22px;
+        height: 22px;
+      }
+    }
+    
+    .title-text h2 {
+      font-size: 18px;
+    }
+    
+    .title-text p {
+      font-size: 13px;
+    }
+  }
+  
+  .info-card {
+    padding: 12px 14px;
+    gap: 12px;
+    
+    .info-icon {
+      width: 38px;
+      height: 38px;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+    
+    .info-content {
+      .info-label {
+        font-size: 10px;
+      }
+      
+      .info-value {
+        font-size: 13px;
+        
+        &.time {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  
+  .attendance-table {
+    font-size: 12px;
+    
+    th, td {
+      padding: 10px 12px;
+    }
+    
+    .role-badge {
+      font-size: 10px;
+      padding: 3px 10px;
+    }
+  }
+}
+
+// Estilos para la sección de reportes
+.reports-card {
+  margin-top: 24px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: $shadow-md;
+  
+  .monthly-report-form {
+    .report-filters {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      
+      .month-field,
+      .year-field {
+        min-width: 140px;
+        
+        ::ng-deep .mat-mdc-form-field-flex {
+          border-radius: 12px;
+        }
+        
+        ::ng-deep .mat-mdc-select-trigger {
+          font-weight: 500;
+        }
+      }
+      
+      .export-buttons {
+        display: flex;
+        gap: 12px;
+        margin-left: auto;
+        
+        .export-button {
+          border-radius: 12px;
+          padding: 0 24px;
+          height: 44px;
+          font-weight: 600;
+          letter-spacing: 0.5px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          
+          &:hover:not([disabled]) {
+            transform: translateY(-2px);
+            box-shadow: $shadow-md;
+          }
+          
+          &[color="accent"] {
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            
+            &:hover:not([disabled]) {
+              background: linear-gradient(135deg, #43a047 0%, #4caf50 100%);
+            }
+          }
+          
+          &[color="primary"] {
+            background: linear-gradient(135deg, #f44336 0%, #ef5350 100%);
+            
+            &:hover:not([disabled]) {
+              background: linear-gradient(135deg, #e53935 0%, #f44336 100%);
+            }
+          }
+          
+          mat-icon {
+            margin-right: 8px;
+          }
+          
+          .spinner {
+            margin-right: 8px;
+          }
+          
+          &[disabled] {
+            opacity: 0.6;
+            transform: none;
+            box-shadow: none;
+          }
+        }
+      }
+    }
+    
+    .report-info {
+      background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+      border-radius: 12px;
+      padding: 20px;
+      border-left: 4px solid $primary-color;
+      
+      .info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+        
+        mat-icon {
+          color: $primary-color;
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+        
+        span {
+          font-size: 14px;
+          color: $text-primary;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+}
+
+// Estilos para la sección de comparación de asistencias
+.comparison-card {
+  margin-top: 24px;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+  border: 1px solid rgba(255, 152, 0, 0.2);
+  border-radius: 16px;
+  box-shadow: $shadow-md;
+  
+  .comparison-form {
+    .comparison-filters {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      
+      .date-field,
+      .lab-field,
+      .rate-field {
+        min-width: 180px;
+        
+        ::ng-deep .mat-mdc-form-field-flex {
+          border-radius: 12px;
+        }
+      }
+      
+      .comparison-actions {
+        display: flex;
+        gap: 12px;
+        margin-left: auto;
+        
+        .compare-button {
+          background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
+          color: white;
+          border-radius: 12px;
+          padding: 0 24px;
+          height: 44px;
+          font-weight: 600;
+          
+          &:hover:not([disabled]) {
+            background: linear-gradient(135deg, #f57400 0%, #ff9800 100%);
+            transform: translateY(-2px);
+            box-shadow: $shadow-md;
+          }
+        }
+        
+        .clear-button {
+          border-radius: 12px;
+          padding: 0 20px;
+          height: 44px;
+        }
+      }
+    }
+    
+    .comparison-results {
+      margin-top: 32px;
+      
+      .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        
+        h3 {
+          margin: 0;
+          color: $text-primary;
+          font-weight: 600;
+        }
+        
+        .export-actions {
+          display: flex;
+          gap: 12px;
+          
+          button {
+            border-radius: 8px;
+            font-weight: 500;
+          }
+        }
+      }
+      
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+        
+        .stat-card {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          padding: 20px;
+          background: white;
+          border-radius: 12px;
+          box-shadow: $shadow-sm;
+          border-left: 4px solid $primary-color;
+          transition: transform 0.2s ease;
+          
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: $shadow-md;
+          }
+          
+          &.absent {
+            border-left-color: $error-color;
+            
+            mat-icon {
+              color: $error-color;
+            }
+          }
+          
+          mat-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+            color: $primary-color;
+          }
+          
+          .stat-content {
+            .stat-number {
+              display: block;
+              font-size: 28px;
+              font-weight: 700;
+              color: $text-primary;
+              line-height: 1;
+            }
+            
+            .stat-label {
+              display: block;
+              font-size: 14px;
+              color: $text-secondary;
+              margin-top: 4px;
+            }
+          }
+        }
+      }
+      
+      .table-container {
+        margin-bottom: 32px;
+        
+        h4 {
+          margin-bottom: 16px;
+          color: $text-primary;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          
+          &::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: $primary-color;
+            border-radius: 2px;
+          }
+        }
+        
+        .comparison-table,
+        .absent-table {
+          width: 100%;
+          background: white;
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: $shadow-sm;
+          
+          th {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            color: $text-primary;
+            font-weight: 600;
+            padding: 16px 12px;
+          }
+          
+          td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            
+            &.absent-cell {
+              color: $error-color;
+              font-weight: 600;
+            }
+          }
+          
+          .attendance-rate {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 12px;
+            
+            &.low-rate {
+              background: #ffebee;
+              color: #c62828;
+            }
+            
+            &.medium-rate {
+              background: #fff3e0;
+              color: #ef6c00;
+            }
+            
+            &.high-rate {
+              background: #e8f5e8;
+              color: #2e7d32;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive design para reportes
+@media (max-width: 768px) {
+  .reports-card {
+    .monthly-report-form {
+      .report-filters {
+        flex-direction: column;
+        align-items: stretch;
+        
+        .month-field,
+        .year-field {
+          width: 100%;
+          min-width: unset;
+        }
+        
+        .export-buttons {
+          margin-left: 0;
+          width: 100%;
+          
+          .export-button {
+            flex: 1;
+            min-width: 0;
+          }
+        }
+      }
+    }
+  }
+  
+  .comparison-card {
+    .comparison-form {
+      .comparison-filters {
+        flex-direction: column;
+        align-items: stretch;
+        
+        .date-field,
+        .lab-field,
+        .rate-field {
+          width: 100%;
+          min-width: unset;
+        }
+        
+        .comparison-actions {
+          margin-left: 0;
+          width: 100%;
+          
+          .compare-button,
+          .clear-button {
+            flex: 1;
+          }
+        }
+      }
+      
+      .comparison-results {
+        .results-header {
+          flex-direction: column;
+          gap: 16px;
+          align-items: stretch;
+          
+          .export-actions {
+            width: 100%;
+            
+            button {
+              flex: 1;
+            }
+          }
+        }
+        
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    }
+  }
+}

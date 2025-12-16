@@ -1,0 +1,30 @@
+<mat-dialog-content class="dialog-content">
+  <h2 mat-dialog-title>Asignar Rol a Usuario</h2>
+  <p class="dialog-subtitle">Ingresa el código del usuario y selecciona el rol a asignar</p>
+
+  <form #roleForm="ngForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="form-field" appearance="fill">
+      <mat-label>Código de Usuario</mat-label>
+      <input matInput [(ngModel)]="roleAssignment.userCode" name="userCode" required
+             placeholder="Ingrese el código del usuario">
+    </mat-form-field>
+
+    <mat-form-field class="form-field" appearance="fill">
+      <mat-label>Rol</mat-label>
+      <mat-select [(ngModel)]="roleAssignment.role" name="role" required>
+        <mat-option *ngFor="let role of availableRoles" [value]="role.name">
+          {{role.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">
+    Cancelar
+  </button>
+  <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="!isFormValid()">
+    Asignar Rol
+  </button>
+</mat-dialog-actions>

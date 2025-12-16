@@ -1,0 +1,164 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+
+  h2 {
+    margin: 0;
+  }
+
+  button {
+    height: 40px;
+    font-weight: 600;
+  }
+}
+
+.schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.slot-card {
+  padding: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+}
+
+.slot-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.slot-time {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+
+  mat-icon {
+    margin-right: 6px;
+  }
+}
+
+.slot-status {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+
+  mat-icon {
+    margin-right: 4px;
+    font-size: 18px;
+  }
+
+  &.available {
+    background: #e1f5e6;
+    color: #1b7f2b;
+  }
+
+  &.full {
+    background: #ffe0e0;
+    color: #c62828;
+  }
+}
+
+/* Card coloring - Colores vibrantes del dashboard */
+.slot-card {
+  background: #2196F3;
+  color: white;
+  border-left: none;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+/* Colores alternos basados en el dashboard */
+.slot-card:nth-child(2n) {
+  background: #FF9800;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+}
+
+.slot-card:nth-child(3n) {
+  background: #4CAF50;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.slot-card:nth-child(4n) {
+  background: #F44336;
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+/* Accesibilidad - Clase para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Mejoras de navegación por teclado */
+.slot-card:focus,
+.header button:focus {
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+}
+
+/* Mejora visual para focus */
+.slot-card:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 0 0 3px rgba(25, 118, 210, 0.2);
+}
+
+/* Alto contraste para mejor legibilidad con fondo colorido */
+.slot-header {
+  color: white;
+  font-weight: 600;
+}
+
+.slot-time {
+  color: white;
+  font-weight: 600;
+}
+
+.slot-subject {
+  color: white;
+  font-weight: 500;
+  font-size: 1.1em;
+}
+
+.slot-type {
+  color: white;
+  font-weight: 500;
+}
+
+.slot-students, .slot-duration {
+  color: white;
+  font-weight: 500;
+}
+
+/* Iconos blancos para contraste con fondo colorido */
+.slot-subject mat-icon,
+.slot-type mat-icon,
+.slot-time mat-icon,
+.slot-students mat-icon,
+.slot-duration mat-icon,
+.slot-lab mat-icon {
+  color: white;
+}

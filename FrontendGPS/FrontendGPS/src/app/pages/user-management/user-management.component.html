@@ -1,0 +1,118 @@
+<main class="user-management" role="main" aria-labelledby="page-title">
+  <!-- Header -->
+  <header class="user-management__header" role="banner">
+    <div class="user-management__title-group">
+      <h1 id="page-title" class="user-management__title">Gestión de Usuarios</h1>
+      <p class="user-management__subtitle">Visualiza usuarios y asigna roles en el sistema</p>
+    </div>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="openAssignRoleDialog()"
+      aria-label="Abrir formulario para asignar rol a usuario"
+      tabindex="0">
+      <mat-icon aria-hidden="true">manage_accounts</mat-icon>
+      Asignar Rol
+    </button>
+  </header>
+
+  <!-- Tarjetas de estadísticas -->
+  <section class="stats">
+    <mat-card class="stats__card stats__card--total">
+      <mat-card-content>
+        <h3 class="stats__title">Total Usuarios</h3>
+        <p class="stats__value">{{ statistics.totalUsers }}</p>
+        <mat-icon>people</mat-icon>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stats__card stats__card--students">
+      <mat-card-content>
+        <h3 class="stats__title">Estudiantes</h3>
+        <p class="stats__value">{{ statistics.students }}</p>
+        <mat-icon>school</mat-icon>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stats__card stats__card--teachers">
+      <mat-card-content>
+        <h3 class="stats__title">Docentes</h3>
+        <p class="stats__value">{{ statistics.teachers }}</p>
+        <mat-icon>person_outline</mat-icon>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="stats__card stats__card--admins">
+      <mat-card-content>
+        <h3 class="stats__title">Administradores</h3>
+        <p class="stats__value">{{ statistics.admins }}</p>
+        <mat-icon>admin_panel_settings</mat-icon>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <!-- Barra de búsqueda y filtros -->
+  <div class="search">
+    <mat-form-field class="search__input-wrapper">
+      <mat-label>Buscar usuarios</mat-label>
+      <input matInput
+             [ngModel]="searchTerm"
+             (ngModelChange)="onSearch($event)"
+             placeholder="Buscar por nombre, email o código">
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Filtrar por rol</mat-label>
+      <mat-select [ngModel]="selectedRoleFilter" (ngModelChange)="onRoleFilterChange($event)">
+        <mat-option value="">Todos los roles</mat-option>
+        <mat-option value="ESTUDIANTE">Estudiante</mat-option>
+        <mat-option value="DOCENTE">Docente</mat-option>
+        <mat-option value="ADMINISTRADOR">Administrador</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Tabla de usuarios -->
+  <div class="users-table">
+    <table mat-table [dataSource]="filteredUsers">
+      <!-- Usuario Column -->
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef>Usuario</th>
+        <td mat-cell *matCellDef="let user">
+          <div class="user-info">
+            <div class="user-info__details">
+              <div class="user-info__name">{{ user.name }}</div>
+              <div class="user-info__email">{{ user.email }}</div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Contacto Column -->
+      <ng-container matColumnDef="contact">
+        <th mat-header-cell *matHeaderCellDef>Código</th>
+        <td mat-cell *matCellDef="let user">{{ user.code }}</td>
+      </ng-container>
+
+      <!-- Rol Column -->
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>Rol</th>
+        <td mat-cell *matCellDef="let user">{{ user.role.name }}</td>
+      </ng-container>
+
+      <!-- Fecha Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Documento</th>
+        <td mat-cell *matCellDef="let user">{{ user.document}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['user', 'contact', 'role', 'date']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['user', 'contact', 'role', 'date'];"></tr>
+
+      <!-- Empty State Row -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          No se encontraron usuarios que coincidan con los criterios de búsqueda.
+        </td>
+      </tr>
+    </table>
+  </div>
+</main>

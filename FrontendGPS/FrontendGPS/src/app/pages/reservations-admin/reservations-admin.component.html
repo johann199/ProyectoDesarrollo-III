@@ -1,0 +1,67 @@
+<header class="header" role="banner">
+  <div>
+    <h1>Mis Prácticas Reservadas</h1>
+    <p>Aquí puedes ver tus prácticas agendadas</p>
+  </div>
+
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="openScheduleForm()"
+    aria-label="Abrir formulario para agendar nueva práctica"
+    tabindex="0">
+    <mat-icon aria-hidden="true">add_circle</mat-icon>&nbsp; Agendar Práctica
+  </button>
+</header>
+
+<main class="schedule-grid" role="main" aria-label="Lista de prácticas reservadas">
+  <article
+    *ngFor="let res of reservations; trackBy: trackByPracticeId"
+    class="slot-card"
+    [ngClass]="'slot-available'"
+    role="article"
+    [attr.aria-label]="'Práctica de ' + res.subject + ' el ' + (res.date | date:'dd/MM/yyyy')"
+    tabindex="0">
+
+    <!-- header fecha + laboratorio -->
+    <header class="slot-header">
+      <time class="slot-date" [attr.datetime]="res.date">{{ res.date | date:'dd/MM/yyyy' }}</time>
+      <span class="slot-lab">
+        <mat-icon aria-hidden="true">science</mat-icon> 
+        <span class="sr-only">Laboratorio: </span>{{ res.laboratoryName }}
+      </span>
+    </header>
+
+    <!-- Asignatura / Tema -->
+    <section class="slot-subject">
+      <mat-icon aria-hidden="true">book</mat-icon>
+      <span class="sr-only">Asignatura: </span>{{ res.subject }}
+    </section>
+
+    <!-- Tipo de práctica -->
+    <section class="slot-type">
+      <mat-icon aria-hidden="true">category</mat-icon>
+      <span class="sr-only">Tipo: </span>{{ res.practiceType }}
+    </section>
+
+    <!-- Horario -->
+    <section class="slot-time">
+      <mat-icon aria-hidden="true">schedule</mat-icon>
+      <span class="sr-only">Horario: </span>
+      <time [attr.datetime]="res.startTime">{{ res.startTime }}</time> - 
+      <time [attr.datetime]="res.endTime">{{ res.endTime }}</time>
+    </section>
+
+    <!-- Cantidad de estudiantes -->
+    <section class="slot-students">
+      <mat-icon aria-hidden="true">group</mat-icon>
+      <span class="sr-only">Estudiantes: </span>{{ res.studentCount }} estudiante{{ res.studentCount > 1 ? 's' : '' }}
+    </section>
+
+    <!-- Duración -->
+    <section class="slot-duration">
+      <mat-icon aria-hidden="true">timer</mat-icon>
+      <span class="sr-only">Duración: </span>{{ res.durationMinutes }} min
+    </section>
+  </article>
+</main>

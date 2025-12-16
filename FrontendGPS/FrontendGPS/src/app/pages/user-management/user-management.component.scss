@@ -1,0 +1,249 @@
+// Variables
+$primary-color: #1a73e8;
+$success-color: #34a853;
+$warning-color: #f9ab00;
+$danger-color: #ea4335;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-500: #adb5bd;
+$gray-700: #495057;
+$gray-900: #212529;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin card-base {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+// Estilos base
+.user-management {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+
+  &__header {
+    @include flex-center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: $gray-900;
+    margin-bottom: 0.5rem;
+  }
+
+  &__subtitle {
+    color: $gray-700;
+  }
+}
+
+// Botón
+.button {
+  @include flex-center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &--primary {
+    background-color: $primary-color;
+    color: white;
+
+    &:hover {
+      background-color: darken($primary-color, 5%);
+    }
+  }
+}
+
+// Estadísticas
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+
+  &__card {
+    @include card-base;
+    color: white;
+    position: relative;
+
+    &--total { background-color: $primary-color; }
+    &--students { background-color: $warning-color; }
+    &--teachers { background-color: $success-color; }
+    &--admins { background-color: $danger-color; }
+  }
+
+  &__title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__value {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+}
+
+// Búsqueda y filtros
+.search {
+  @include flex-center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  &__input-wrapper {
+    position: relative;
+    flex: 1;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.5rem 0.5rem 0.5rem 2.5rem;
+    border: 1px solid $gray-200;
+    border-radius: 0.25rem;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+  }
+
+  &__icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $gray-500;
+  }
+
+  &__select {
+    padding: 0.5rem;
+    border: 1px solid $gray-200;
+    border-radius: 0.25rem;
+    min-width: 150px;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+  }
+}
+
+// Tabla
+.users-table {
+  background: white;
+  @include card-base;
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    background-color: $gray-100;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: $gray-700;
+  }
+
+  td {
+    padding: 1rem;
+    border-bottom: 1px solid $gray-200;
+  }
+
+  tr:hover {
+    background-color: $gray-100;
+  }
+}
+
+// Celda de usuario
+.user-info {
+  @include flex-center;
+  gap: 1rem;
+
+  &__avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__name {
+    font-weight: 500;
+    color: $gray-900;
+  }
+
+  &__email {
+    color: $gray-700;
+    font-size: 0.875rem;
+  }
+}
+
+// Badge de estado
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+
+  &--active {
+    background-color: lighten($success-color, 45%);
+    color: darken($success-color, 10%);
+  }
+
+  &--inactive {
+    background-color: lighten($danger-color, 45%);
+    color: darken($danger-color, 10%);
+  }
+}
+
+/* ============================================
+   MEJORAS BÁSICAS DE ACCESIBILIDAD
+   ============================================ */
+
+/* Focus visible básico */
+button:focus,
+input:focus,
+mat-select:focus {
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
+}
+
+/* Mejorar hover en cards */
+.stats__card {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Hover en tabla */
+tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Botones con tamaño mínimo */
+button {
+  min-height: 40px;
+  min-width: 40px;
+}

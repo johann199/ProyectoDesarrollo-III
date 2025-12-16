@@ -1,0 +1,95 @@
+<!-- Top Toolbar -->
+<mat-toolbar color="primary" class="top-toolbar" *ngIf="isLoggedIn">
+  <button mat-icon-button (click)="toggleMenu()" class="menu-toggle">
+    <mat-icon>menu</mat-icon>
+  </button>
+  
+  <div class="toolbar-title">
+    <mat-icon class="brand-logo">science</mat-icon>
+    <span class="brand-text">Sistema de Gestión de Laboratorios</span>
+  </div>
+
+  <!-- User Menu -->
+  <div class="user-section">
+    <div class="user-info">
+      <span class="user-role">{{ userRole }}</span>
+      <span class="user-name">{{ userName }}</span>
+      
+    </div>
+    <button mat-icon-button [matMenuTriggerFor]="userMenu">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <div class="menu-header">
+        <div class="menu-user-info">
+          <div class="menu-user-name">{{ userName }}</div>
+          <div class="menu-user-role">{{ userRole }}</div>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <button mat-menu-item>
+        <mat-icon>person</mat-icon>
+        Perfil
+      </button>
+      <button mat-menu-item>
+        <mat-icon>settings</mat-icon>
+        Configuración
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Cerrar Sesión
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>
+
+<!-- Sidebar Navigation -->
+<mat-sidenav-container class="sidenav-container" *ngIf="isLoggedIn">
+  <mat-sidenav #sidenav 
+               mode="side" 
+               [opened]="isMenuOpen"
+               class="sidebar"
+               fixedInViewport="true">
+    
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+      <mat-icon class="sidebar-logo">gps_fixed</mat-icon>
+      <h3 class="sidebar-title">GPS System</h3>
+    </div>
+
+    <!-- Navigation Menu -->
+    <mat-nav-list class="nav-list">
+      <mat-list-item 
+        *ngFor="let item of menuItems" 
+        [routerLink]="item.route" 
+        routerLinkActive="active" 
+        (click)="closeMenuOnMobile()">
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle>{{ item.label }}</span>
+      </mat-list-item>
+      
+      <mat-divider class="nav-divider"></mat-divider>
+      
+      <mat-list-item routerLink="/profile" routerLinkActive="active" (click)="closeMenuOnMobile()">
+        <mat-icon matListItemIcon>person</mat-icon>
+        <span matListItemTitle>Perfil</span>
+      </mat-list-item>
+      
+      <!-- <mat-list-item routerLink="/settings" routerLinkActive="active" (click)="closeMenuOnMobile()">
+        <mat-icon matListItemIcon>settings</mat-icon>
+        <span matListItemTitle>Configuración</span>
+      </mat-list-item> -->
+      
+      <mat-list-item (click)="logout()">
+        <mat-icon matListItemIcon>logout</mat-icon>
+        <span matListItemTitle>Cerrar Sesión</span>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Main Content Area -->
+  <mat-sidenav-content class="main-content">
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

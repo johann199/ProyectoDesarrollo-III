@@ -1,0 +1,30 @@
+{
+  "testUser": {
+    "code": "admin_code",
+    "password": "admin_password", 
+    "name": "Administrador"
+  },
+  "comparisonForm": {
+    "required": {
+      "startDate": "2024-11-01",
+      "endDate": "2024-11-30"
+    },
+    "optional": {
+      "laboratoryName": "Laboratorio de Pruebas",
+      "minAttendanceRate": 75
+    },
+    "testCases": {
+      "noData": {
+        "startDate": "2020-01-01", 
+        "endDate": "2020-01-02"
+      },
+      "recentData": {
+        "startDate": "2024-11-15",
+        "endDate": "2024-11-20"
+      }
+    }
+  },
+  "testLaboratory": {
+    "name": "Laboratorio Principal"
+  }
+}

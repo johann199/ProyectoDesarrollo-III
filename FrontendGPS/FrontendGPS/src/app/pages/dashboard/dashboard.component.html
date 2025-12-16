@@ -1,0 +1,29 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p>Panel de control de Laboratorio</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <mat-card *ngFor="let stat of stats" class="stat-card" [class]="'stat-' + stat.color">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon [color]="stat.color">{{ stat.icon }}</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ stat.value }}</h3>
+            <p>{{ stat.title }}</p>
+            <div class="stat-change" [class]="stat.changeType">
+              <mat-icon>{{ stat.changeType === 'positive' ? 'trending_up' : 'trending_down' }}</mat-icon>
+              <span>{{ stat.change }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

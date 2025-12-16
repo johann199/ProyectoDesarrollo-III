@@ -1,0 +1,152 @@
+<mat-dialog-content role="main" aria-labelledby="dialog-title">
+  <h2 id="dialog-title" class="sr-only">Formulario de Agendamiento de Práctica</h2>
+  <form [formGroup]="form" class="form-container" role="form" aria-label="Datos de la práctica a agendar">
+
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Asignatura / Tema</mat-label>
+        <input 
+          matInput 
+          formControlName="subject"
+          id="subject-input"
+          aria-describedby="subject-error"
+          tabindex="1">
+        <mat-error id="subject-error" *ngIf="form.get('subject')?.hasError('required')" role="alert">
+          La asignatura o tema es obligatorio
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Laboratorio</mat-label>
+        <input 
+          matInput 
+          formControlName="laboratoryName"
+          id="laboratory-input"
+          aria-describedby="laboratory-error"
+          tabindex="2">
+        <mat-error id="laboratory-error" *ngIf="form.get('laboratoryName')?.hasError('required')" role="alert">
+          El nombre del laboratorio es obligatorio
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Tipo de práctica</mat-label>
+        <mat-select 
+          formControlName="practiceType"
+          id="practice-type-select"
+          aria-describedby="practice-type-error"
+          tabindex="3">
+          <mat-option value="ELECTRONICA">Electrónica</mat-option>
+          <mat-option value="SISTEMAS">Sistemas</mat-option>
+          <mat-option value="OTRO">Otro</mat-option>
+        </mat-select>
+        <mat-error id="practice-type-error" *ngIf="form.get('practiceType')?.hasError('required')" role="alert">
+          Debe seleccionar un tipo de práctica
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Fecha</mat-label>
+        <input 
+          matInput 
+          type="date" 
+          formControlName="date"
+          id="date-input"
+          aria-describedby="date-error"
+          tabindex="4">
+        <mat-error id="date-error" *ngIf="form.get('date')?.hasError('required')" role="alert">
+          La fecha de la práctica es obligatoria
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Hora de inicio</mat-label>
+        <input 
+          matInput 
+          type="time" 
+          formControlName="startTime"
+          id="start-time-input"
+          aria-describedby="start-time-error"
+          tabindex="5">
+        <mat-error id="start-time-error" *ngIf="form.get('startTime')?.hasError('required')" role="alert">
+          La hora de inicio es obligatoria
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Duración (minutos)</mat-label>
+        <input 
+          matInput 
+          type="number" 
+          formControlName="durationMinutes"
+          id="duration-input"
+          aria-describedby="duration-error"
+          tabindex="6"
+          min="1"
+          max="480">
+        <mat-error id="duration-error" *ngIf="form.get('durationMinutes')?.hasError('required')" role="alert">
+          La duración en minutos es obligatoria
+        </mat-error>
+        <mat-error id="duration-error" *ngIf="form.get('durationMinutes')?.hasError('min')" role="alert">
+          La duración debe ser mayor a 0 minutos
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field>
+        <mat-label>Número de estudiantes</mat-label>
+        <input 
+          matInput 
+          type="number" 
+          formControlName="studentCount"
+          id="student-count-input"
+          aria-describedby="student-count-error"
+          tabindex="7"
+          min="1"
+          max="30">
+        <mat-error id="student-count-error" *ngIf="form.get('studentCount')?.hasError('required')" role="alert">
+          El número de estudiantes es obligatorio
+        </mat-error>
+        <mat-error id="student-count-error" *ngIf="form.get('studentCount')?.hasError('min')" role="alert">
+          Debe haber al menos 1 estudiante
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" role="group" aria-label="Acciones del formulario">
+  <button 
+    mat-button 
+    (click)="cancel()"
+    tabindex="8"
+    aria-label="Cancelar y cerrar formulario">
+    Cancelar
+  </button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="submit()" 
+    [disabled]="form.invalid"
+    tabindex="9"
+    aria-label="Guardar práctica"
+    [attr.aria-describedby]="form.invalid ? 'form-errors' : null">
+    Guardar
+  </button>
+</mat-dialog-actions>
+
+<div id="form-errors" class="sr-only" *ngIf="form.invalid" aria-live="polite">
+  Hay errores en el formulario. Por favor, revise los campos marcados en rojo.
+</div>

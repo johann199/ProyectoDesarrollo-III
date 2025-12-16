@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  db:
+    image: postgres:15
+    container_name: sgldb
+    environment:
+      POSTGRES_DB: sgldb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d sgldb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend Spring Boot
+  backend:
+    build:
+      context: ./backend/com.sgl.backend
+      dockerfile: Dockerfile
+    container_name: backend-api
+    ports:
+      - '8080:8080'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/sgldb
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Gestión de Usuarios (Node.js)
+  gestion-usuarios:
+    build:
+      context: ./sira_auth/sira-auth
+      dockerfile: Dockerfile
+    container_name: gestion-usuarios
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=sgldb
+      - DB_USER=admin
+      - DB_PASSWORD=password
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Frontend Angular
+  frontend:
+    build:
+      context: ./FrontendGPS/FrontendGPS
+      dockerfile: Dockerfile
+    container_name: frontend-angular
+    ports:
+      - '4200:4200'
+    volumes:
+      - ./FrontendGPS/FrontendGPS:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - API_URL=http://backend:8080
+      - USERS_API_URL=http://gestion-usuarios:3000
+    depends_on:
+      - backend
+      - gestion-usuarios
+    networks:
+      - app-network
+    command: npm start -- --host 0.0.0.0 --poll 1000
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

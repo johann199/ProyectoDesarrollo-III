@@ -1,0 +1,571 @@
+
+<div class="attendance-container">
+  <div class="attendance-header">
+    <h1>Registro de Asistencias</h1>
+    <p>Sistema de control de acceso al laboratorio</p>
+  </div>
+
+  <div class="attendance-content">
+    <!-- FORMULARIO DE REGISTRO -->
+    <mat-card class="search-card glass-effect">
+      <mat-card-content>
+        <div class="card-title-section">
+          <div class="title-icon">
+            <mat-icon>search</mat-icon>
+          </div>
+          <div class="title-text">
+            <h2>Buscar Estudiante</h2>
+            <p>Ingrese el código universitario para registrar la asistencia</p>
+          </div>
+        </div>
+
+        <form [formGroup]="attendanceForm" (ngSubmit)="onSearchStudent()">
+          <div class="search-form">
+            <div class="input-wrapper">
+              <mat-form-field appearance="fill" class="full-width modern-input">
+                <input
+                  matInput
+                  formControlName="studentCode"
+                  placeholder="Ej: 2266301"
+                  maxlength="20"
+                  (keyup.enter)="onSearchStudent()"
+                  autocomplete="off"
+                />
+                <mat-icon matPrefix class="input-icon">badge</mat-icon>
+                <mat-error *ngIf="attendanceForm.get('studentCode')?.hasError('required')">
+                  Código requerido
+                </mat-error>
+                <mat-error *ngIf="attendanceForm.get('studentCode')?.hasError('minlength')">
+                  Mínimo 7 dígitos
+                </mat-error>
+                <mat-error *ngIf="attendanceForm.get('studentCode')?.hasError('pattern')">
+                  Solo números
+                </mat-error>
+              </mat-form-field>
+              <span class="input-hint">Mínimo 7 dígitos numéricos</span>
+            </div>
+
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="isLoading || attendanceForm.invalid"
+              class="search-button modern-button"
+            >
+              <span class="button-content">
+                <mat-icon *ngIf="!isLoading">how_to_reg</mat-icon>
+                <mat-progress-spinner
+                  *ngIf="isLoading"
+                  diameter="20"
+                  mode="indeterminate"
+                  class="spinner"
+                ></mat-progress-spinner>
+                <span class="button-text">
+                  {{ isLoading ? "Registrando..." : "Registrar" }}
+                </span>
+              </span>
+            </button>
+          </div>
+        </form>
+
+        <div *ngIf="errorMessage" class="error-message animate-in">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- INFORMACION DEL ESTUDIANTE -->
+    <mat-card *ngIf="studentData" class="student-card glass-effect animate-in">
+      <mat-card-content>
+        <div class="card-title-section success">
+          <div class="title-icon success">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <div class="title-text">
+            <h2>¡Estudiante Encontrado!</h2>
+            <p>Asistencia registrada exitosamente</p>
+          </div>
+        </div>
+
+        <div class="student-info-grid">
+          <div class="info-card">
+            <div class="info-icon">
+              <mat-icon>badge</mat-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Código</span>
+              <span class="info-value">{{ studentData.code }}</span>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">
+              <mat-icon>person</mat-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Nombre Completo</span>
+              <span class="info-value">{{ studentData.name }}</span>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">
+              <mat-icon>email</mat-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Correo Electrónico</span>
+              <span class="info-value">{{ studentData.email }}</span>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">
+              <mat-icon>credit_card</mat-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Documento</span>
+              <span class="info-value">{{ studentData.document }}</span>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">
+              <mat-icon>school</mat-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Rol</span>
+              <span class="info-value">{{ studentData.role?.name || "N/A" }}</span>
+            </div>
+          </div>
+
+          <div class="info-card highlight">
+            <div class="info-icon">
+              <mat-icon>schedule</mat-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Hora de Registro</span>
+              <span class="info-value time">{{ currentTime }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button mat-stroked-button (click)="resetForm()" class="cancel-button modern-button">
+            <mat-icon>refresh</mat-icon>
+            <span>Nuevo Registro</span>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- REPORTES MENSUALES -->
+    <mat-card class="reports-card glass-effect">
+      <mat-card-content>
+        <div class="card-title-section">
+          <div class="title-icon">
+            <mat-icon>assessment</mat-icon>
+          </div>
+          <div class="title-text">
+            <h2>Reportes Mensuales</h2>
+            <p>Genere reportes de asistencias en formato CSV o PDF</p>
+          </div>
+        </div>
+
+        <form [formGroup]="monthlyReportForm" class="monthly-report-form">
+          <div class="report-filters">
+            <mat-form-field appearance="fill" class="month-field">
+              <mat-label>Mes</mat-label>
+              <mat-select formControlName="month">
+                <mat-option *ngFor="let month of months" [value]="month.value">
+                  {{ month.name }}
+                </mat-option>
+              </mat-select>
+              <mat-icon matPrefix>calendar_today</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="year-field">
+              <mat-label>Año</mat-label>
+              <mat-select formControlName="year">
+                <mat-option *ngFor="let year of years" [value]="year">
+                  {{ year }}
+                </mat-option>
+              </mat-select>
+              <mat-icon matPrefix>date_range</mat-icon>
+            </mat-form-field>
+
+            <div class="export-buttons">
+              <button 
+                mat-raised-button 
+                color="accent" 
+                (click)="exportMonthlyReport('csv')"
+                [disabled]="isExporting || monthlyReportForm.invalid"
+                class="export-button"
+              >
+                <mat-icon *ngIf="!isExporting">file_download</mat-icon>
+                <mat-progress-spinner
+                  *ngIf="isExporting"
+                  diameter="20"
+                  mode="indeterminate"
+                  class="spinner"
+                ></mat-progress-spinner>
+                <span>{{ isExporting ? 'Generando...' : 'Exportar CSV' }}</span>
+              </button>
+
+              <button 
+                mat-raised-button 
+                color="primary" 
+                (click)="exportMonthlyReport('pdf')"
+                [disabled]="isExporting || monthlyReportForm.invalid"
+                class="export-button"
+              >
+                <mat-icon *ngIf="!isExporting">picture_as_pdf</mat-icon>
+                <mat-progress-spinner
+                  *ngIf="isExporting"
+                  diameter="20"
+                  mode="indeterminate"
+                  class="spinner"
+                ></mat-progress-spinner>
+                <span>{{ isExporting ? 'Generando...' : 'Exportar PDF' }}</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="report-info">
+            <div class="info-item">
+              <mat-icon>info_outline</mat-icon>
+              <span>Los reportes incluyen todos los registros de asistencia del mes seleccionado</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>file_copy</mat-icon>
+              <span>Formato CSV: Para análisis en Excel o Google Sheets</span>
+            </div>
+            <div class="info-item">
+              <mat-icon>picture_as_pdf</mat-icon>
+              <span>Formato PDF: Para presentaciones y archivo</span>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- COMPARACIÓN DE ASISTENCIAS -->
+    <mat-card class="comparison-card glass-effect">
+      <mat-card-content>
+        <div class="card-title-section">
+          <div class="title-icon">
+            <mat-icon>compare_arrows</mat-icon>
+          </div>
+          <div class="title-text">
+            <h2>Comparación Reservas vs Asistencias</h2>
+            <p>Compare las reservas confirmadas con los registros de asistencia para identificar ausencias</p>
+          </div>
+        </div>
+
+        <form [formGroup]="comparisonForm" class="comparison-form">
+          <div class="comparison-filters">
+            <mat-form-field appearance="fill" class="date-field">
+              <mat-label>Fecha Inicio</mat-label>
+              <input matInput [matDatepicker]="compStartPicker" formControlName="startDate">
+              <mat-datepicker-toggle matSuffix [for]="compStartPicker"></mat-datepicker-toggle>
+              <mat-datepicker #compStartPicker></mat-datepicker>
+              <mat-error *ngIf="comparisonForm.get('startDate')?.hasError('required')">
+                Fecha de inicio requerida
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="date-field">
+              <mat-label>Fecha Fin</mat-label>
+              <input matInput [matDatepicker]="compEndPicker" formControlName="endDate">
+              <mat-datepicker-toggle matSuffix [for]="compEndPicker"></mat-datepicker-toggle>
+              <mat-datepicker #compEndPicker></mat-datepicker>
+              <mat-error *ngIf="comparisonForm.get('endDate')?.hasError('required')">
+                Fecha de fin requerida
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="lab-field">
+              <mat-label>Laboratorio (opcional)</mat-label>
+              <input matInput formControlName="laboratoryName" placeholder="Ej: Laboratorio 1">
+              <mat-icon matPrefix>science</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="rate-field">
+              <mat-label>Tasa Mínima de Asistencia (%)</mat-label>
+              <input matInput type="number" formControlName="minAttendanceRate" 
+                     min="0" max="100" placeholder="0">
+              <mat-icon matPrefix>percent</mat-icon>
+            </mat-form-field>
+
+            <div class="comparison-actions">
+              <button 
+                mat-raised-button 
+                color="accent" 
+                (click)="loadAttendanceComparison()"
+                [disabled]="isLoadingComparison || comparisonForm.invalid"
+                class="compare-button"
+              >
+                <mat-icon *ngIf="!isLoadingComparison">analytics</mat-icon>
+                <mat-progress-spinner
+                  *ngIf="isLoadingComparison"
+                  diameter="20"
+                  mode="indeterminate"
+                  class="spinner"
+                ></mat-progress-spinner>
+                <span>{{ isLoadingComparison ? 'Analizando...' : 'Analizar' }}</span>
+              </button>
+
+              <button 
+                mat-stroked-button 
+                (click)="clearComparison()"
+                [disabled]="isLoadingComparison"
+                class="clear-button"
+              >
+                <mat-icon>clear_all</mat-icon>
+                <span>Limpiar</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Resultados de la comparación -->
+          <div *ngIf="comparisonResults.length > 0" class="comparison-results">
+            <div class="results-header">
+              <h3>Resultados de la Comparación</h3>
+              <div class="export-actions">
+                <button 
+                  mat-raised-button 
+                  color="primary" 
+                  (click)="exportComparisonReport('csv')"
+                  [disabled]="isExporting"
+                >
+                  <mat-icon>file_download</mat-icon>
+                  Exportar CSV
+                </button>
+                <button 
+                  mat-raised-button 
+                  color="warn" 
+                  (click)="exportComparisonReport('pdf')"
+                  [disabled]="isExporting"
+                >
+                  <mat-icon>picture_as_pdf</mat-icon>
+                  Exportar PDF
+                </button>
+              </div>
+            </div>
+
+            <!-- Estadísticas generales -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <mat-icon>event</mat-icon>
+                <div class="stat-content">
+                  <span class="stat-number">{{ comparisonResults.length }}</span>
+                  <span class="stat-label">Prácticas Analizadas</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <mat-icon>group</mat-icon>
+                <div class="stat-content">
+                  <span class="stat-number">{{ getTotalExpectedStudents() }}</span>
+                  <span class="stat-label">Estudiantes Esperados</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <mat-icon>check_circle</mat-icon>
+                <div class="stat-content">
+                  <span class="stat-number">{{ getTotalAttendedStudents() }}</span>
+                  <span class="stat-label">Estudiantes Asistentes</span>
+                </div>
+              </div>
+              <div class="stat-card absent">
+                <mat-icon>cancel</mat-icon>
+                <div class="stat-content">
+                  <span class="stat-number">{{ absentStudents.length }}</span>
+                  <span class="stat-label">Estudiantes Ausentes</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabla de comparación por práctica -->
+            <div class="table-container">
+              <h4>Comparación por Práctica</h4>
+              <table mat-table [dataSource]="comparisonResults" class="comparison-table">
+                <ng-container matColumnDef="practica">
+                  <th mat-header-cell *matHeaderCellDef>Práctica</th>
+                  <td mat-cell *matCellDef="let comp">{{ comp.subject }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="fecha">
+                  <th mat-header-cell *matHeaderCellDef>Fecha</th>
+                  <td mat-cell *matCellDef="let comp">{{ comp.practiceDate | date:'dd/MM/yyyy' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="horario">
+                  <th mat-header-cell *matHeaderCellDef>Horario</th>
+                  <td mat-cell *matCellDef="let comp">{{ comp.practiceTime }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="esperados">
+                  <th mat-header-cell *matHeaderCellDef>Esperados</th>
+                  <td mat-cell *matCellDef="let comp">{{ comp.expectedStudents }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="asistentes">
+                  <th mat-header-cell *matHeaderCellDef>Asistentes</th>
+                  <td mat-cell *matCellDef="let comp">{{ comp.attendedStudents }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="ausentes">
+                  <th mat-header-cell *matHeaderCellDef>Ausentes</th>
+                  <td mat-cell *matCellDef="let comp" class="absent-cell">{{ comp.absentStudents.length }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="tasa">
+                  <th mat-header-cell *matHeaderCellDef>Tasa %</th>
+                  <td mat-cell *matCellDef="let comp">
+                    <span class="attendance-rate" 
+                          [ngClass]="{'low-rate': comp.attendanceRate < 70, 'medium-rate': comp.attendanceRate >= 70 && comp.attendanceRate < 85, 'high-rate': comp.attendanceRate >= 85}">
+                      {{ comp.attendanceRate.toFixed(1) }}%
+                    </span>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="comparisonDisplayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: comparisonDisplayedColumns;"></tr>
+              </table>
+            </div>
+
+            <!-- Tabla de estudiantes ausentes -->
+            <div *ngIf="absentStudents.length > 0" class="table-container">
+              <h4>Estudiantes Ausentes (Detalle)</h4>
+              <table mat-table [dataSource]="absentStudents" class="absent-table">
+                <ng-container matColumnDef="codigo">
+                  <th mat-header-cell *matHeaderCellDef>Código</th>
+                  <td mat-cell *matCellDef="let absent">{{ absent.userCode }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="nombre">
+                  <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                  <td mat-cell *matCellDef="let absent">{{ absent.userName }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="email">
+                  <th mat-header-cell *matHeaderCellDef>Email</th>
+                  <td mat-cell *matCellDef="let absent">{{ absent.userEmail }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="practica">
+                  <th mat-header-cell *matHeaderCellDef>ID Práctica</th>
+                  <td mat-cell *matCellDef="let absent">{{ absent.practiceId }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="fecha">
+                  <th mat-header-cell *matHeaderCellDef>Fecha</th>
+                  <td mat-cell *matCellDef="let absent">{{ absent.practiceDate | date:'dd/MM/yyyy' }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="absentDisplayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: absentDisplayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- LISTADO DE ASISTENCIAS -->
+    <mat-card class="list-card glass-effect">
+      <mat-card-content>
+        <div class="card-title-section">
+          <div class="title-icon">
+            <mat-icon>list</mat-icon>
+          </div>
+          <div class="title-text">
+            <h2>Historial de Asistencias</h2>
+            <p>Registro completo de accesos al laboratorio</p>
+          </div>
+        </div>
+
+        <!-- FILTROS -->
+        <form [formGroup]="filterForm" class="filters-section">
+          <div class="filters-grid">
+            <mat-form-field appearance="fill" class="filter-field">
+              <mat-label>Fecha Inicio</mat-label>
+              <input matInput [matDatepicker]="startPicker" formControlName="start">
+              <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+              <mat-datepicker #startPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="filter-field">
+              <mat-label>Fecha Fin</mat-label>
+              <input matInput [matDatepicker]="endPicker" formControlName="end">
+              <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+              <mat-datepicker #endPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="filter-field">
+              <mat-label>Código de Estudiante</mat-label>
+              <input matInput formControlName="userCode" placeholder="Ej: 2266301">
+              <mat-icon matPrefix>search</mat-icon>
+            </mat-form-field>
+
+            <div class="filter-actions">
+              <button mat-raised-button color="primary" (click)="onFilterAttendances()" type="button">
+                <mat-icon>filter_list</mat-icon>
+                Filtrar
+              </button>
+              <button mat-stroked-button (click)="clearFilters()" type="button">
+                <mat-icon>clear</mat-icon>
+                Limpiar
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- TABLA DE ASISTENCIAS -->
+        <div class="table-container">
+          <div *ngIf="isLoadingList" class="loading-container">
+            <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+            <p>Cargando asistencias...</p>
+          </div>
+
+          <table mat-table [dataSource]="attendancesList" *ngIf="!isLoadingList && attendancesList.length > 0" class="attendance-table">
+            <ng-container matColumnDef="codigo">
+              <th mat-header-cell *matHeaderCellDef>Código</th>
+              <td mat-cell *matCellDef="let attendance">{{ attendance.user.code }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let attendance">{{ attendance.user.name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="documento">
+              <th mat-header-cell *matHeaderCellDef>Documento</th>
+              <td mat-cell *matCellDef="let attendance">{{ attendance.user.document }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="rol">
+              <th mat-header-cell *matHeaderCellDef>Rol</th>
+              <td mat-cell *matCellDef="let attendance">
+                <span class="role-badge">{{ attendance.user.role.name }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha">
+              <th mat-header-cell *matHeaderCellDef>Fecha y Hora</th>
+              <td mat-cell *matCellDef="let attendance">{{ formatDate(attendance.timestamp) }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+
+          <div *ngIf="!isLoadingList && attendancesList.length === 0" class="no-data">
+            <mat-icon>inbox</mat-icon>
+            <p>No hay asistencias registradas</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="app-container">
+
+  <app-navigation *ngIf="isLoggedIn">
+    <!-- Main Content -->
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+    
+    <!-- Footer -->
+    <!-- <app-footer></app-footer> -->
+  </app-navigation>
+  
+  <!-- Content for non-authenticated pages (login, register) -->
+  <div class="auth-container" *ngIf="!isLoggedIn">
+    <router-outlet></router-outlet>
+  </div>
+</div>

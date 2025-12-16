@@ -1,0 +1,206 @@
+<div class="login-container">
+  <!-- Header con logo optimizado -->
+  <header class="login-header" role="banner">
+    <div class="container">
+      <div class="logo-container" role="img" aria-label="Logo Universidad del Valle">
+        <img 
+          src="assets/logo.png" 
+          alt="Universidad del Valle" 
+          class="logo-image"
+          loading="eager"
+          (load)="logoLoaded = true"
+          (error)="logoLoaded = false"
+        >
+        <div *ngIf="!logoLoaded" class="logo-fallback" aria-hidden="true">
+          UNIVALLE
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal del login -->
+  <main class="login-main" role="main">
+    <div class="login-wrapper">
+      <div class="login-card">
+        <!-- Encabezado del formulario -->
+        <div class="login-card-header">
+          <h1 class="login-title">Iniciar Sesión</h1>
+          <p class="login-subtitle">Sistema de Gestión de Prácticas - Laboratorio</p>
+        </div>
+
+        <!-- Formulario de login -->
+        <form 
+          class="login-form" 
+          [formGroup]="loginForm" 
+          (ngSubmit)="login()"
+          novalidate
+          aria-label="Formulario de inicio de sesión"
+        >
+          <!-- Campo Usuario -->
+          <div class="form-group">
+            <label for="username" class="form-label">
+              <span class="label-icon">
+                <mat-icon aria-hidden="true">person</mat-icon>
+              </span>
+              <span>Usuario</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon" aria-hidden="true">
+                <mat-icon>badge</mat-icon>
+              </span>
+              <input
+                id="username"
+                name="username"
+                formControlName="username"
+                type="text"
+                required
+                autocomplete="username"
+                class="form-input"
+                [class.is-invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+                [class.is-valid]="loginForm.get('username')?.valid && loginForm.get('username')?.touched"
+                placeholder="Ingresa tu código de estudiante"
+                aria-describedby="username-error"
+                [attr.aria-invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+              />
+            </div>
+            <app-field-error 
+              id="username-error"
+              [control]="loginForm.get('username')"
+              role="alert"
+            ></app-field-error>
+          </div>
+
+          <!-- Campo Contraseña -->
+          <div class="form-group">
+            <label for="password" class="form-label">
+              <span class="label-icon">
+                <mat-icon aria-hidden="true">lock</mat-icon>
+              </span>
+              <span>Contraseña</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon" aria-hidden="true">
+                <mat-icon>vpn_key</mat-icon>
+              </span>
+              <input
+                id="password"
+                name="password"
+                formControlName="password"
+                [type]="showPassword ? 'text' : 'password'"
+                required
+                autocomplete="current-password"
+                class="form-input"
+                [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                [class.is-valid]="loginForm.get('password')?.valid && loginForm.get('password')?.touched"
+                placeholder="Ingresa tu contraseña"
+                aria-describedby="password-error"
+                [attr.aria-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+              />
+              <button
+                type="button"
+                (click)="togglePassword()"
+                class="password-toggle"
+                [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                aria-controls="password"
+              >
+                <mat-icon aria-hidden="true">
+                  {{ showPassword ? 'visibility_off' : 'visibility' }}
+                </mat-icon>
+              </button>
+            </div>
+            <app-field-error 
+              id="password-error"
+              [control]="loginForm.get('password')"
+              role="alert"
+            ></app-field-error>
+          </div>
+
+          <!-- Enlace de contraseña olvidada -->
+          <div class="form-actions">
+            <a
+              href="https://swebse58.univalle.edu.co/sac/sac.php/solicitarClave"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="forgot-password-link"
+            >
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+
+          <!-- Botón de envío -->
+          <div class="form-submit">
+            <button
+              type="submit"
+              [disabled]="loading || loginForm.invalid"
+              class="btn-submit"
+              [attr.aria-busy]="loading"
+            >
+              <span class="btn-icon" aria-hidden="true">
+                <svg
+                  *ngIf="loading"
+                  class="spinner"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="spinner-track"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="spinner-path"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+                <mat-icon *ngIf="!loading">login</mat-icon>
+              </span>
+              <span>{{ loading ? 'Iniciando sesión...' : 'Ingresar al Sistema' }}</span>
+            </button>
+          </div>
+
+          <!-- Mensajes de estado -->
+          <div 
+            class="form-message"
+            *ngIf="message"
+            role="alert"
+            aria-live="polite"
+            [@fadeIn]
+          >
+            <p
+              class="message-content"
+              [class.message-error]="message.includes('❌')"
+              [class.message-success]="message.includes('✅')"
+              [class.message-info]="!message.includes('❌') && !message.includes('✅')"
+            >
+              {{ message }}
+            </p>
+          </div>
+
+          <!-- Información adicional -->
+          <div class="form-footer">
+            <p class="footer-info">
+              <strong>Credenciales SIRA:</strong> Usa tu código de estudiante y contraseña del sistema SIRA
+            </p>
+            <p class="footer-copyright">
+              Universidad del Valle - Sistema de Gestión de Laboratorios
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="login-footer" role="contentinfo">
+    <div class="container">
+      <p class="footer-text">
+        © 2025 Universidad del Valle. Todos los derechos reservados.
+      </p>
+    </div>
+  </footer>
+</div>

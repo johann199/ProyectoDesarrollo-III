@@ -1,0 +1,7 @@
+<div *ngIf="control && control.errors && control.touched" class="field-error-message">
+  <span *ngIf="control.errors['required']">Campo requerido</span>
+  <span *ngIf="control.errors['pattern']">Formato inválido</span>
+  <span *ngIf="control.errors['minlength']">Formato inválido</span>
+  <span *ngIf="control.errors['email']">Formato inválido</span>
+  <span *ngIf="control.errors['min'] || control.errors['max']">Formato inválido</span>
+</div>

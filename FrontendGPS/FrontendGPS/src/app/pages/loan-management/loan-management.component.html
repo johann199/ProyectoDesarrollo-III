@@ -1,0 +1,311 @@
+<div class="loan-container">
+  <header class="loan-header">
+    <h1>Gestión de Préstamos</h1>
+    <p>Sistema de préstamo y devolución de equipos de laboratorio</p>
+  </header>
+
+  <main class="loan-content" role="main">
+    <mat-tab-group >
+    
+      <mat-tab label="Nuevo Préstamo">
+        <section aria-labelledby="create-loan-title">
+          <mat-card class="create-card glass-effect">
+            <mat-card-content>
+              <div class="card-title-section">
+                <div class="title-icon" aria-hidden="true">
+                  <mat-icon>inventory_2</mat-icon>
+                </div>
+                <div class="title-text">
+                  <h2 id="create-loan-title">Registrar Nuevo Préstamo</h2>
+                  <p>Complete la información para registrar un préstamo de equipo</p>
+                </div>
+              </div>
+
+              <form [formGroup]="loanForm" (ngSubmit)="onCreateLoan()" role="form">
+                <div class="create-form">
+                  <div class="form-grid">
+                    <div class="input-wrapper">
+                      <mat-form-field appearance="fill" class="full-width modern-input">
+                        <mat-label>Código de Barras del Equipo</mat-label>
+                        <input
+                          matInput
+                          formControlName="barcode"
+                          placeholder="Ej: EQ-001"
+                          maxlength="50"
+                          autocomplete="off"
+                          aria-describedby="barcode-hint"
+                          required
+                        />
+                        <mat-icon matPrefix class="input-icon" aria-hidden="true">qr_code</mat-icon>
+                        <mat-error *ngIf="loanForm.get('barcode')?.hasError('required')">
+                          Código de barras requerido
+                        </mat-error>
+                      </mat-form-field>
+                      <span class="input-hint" id="barcode-hint">Escanea o ingresa el código de barras del equipo</span>
+                    </div>
+
+                    <div class="input-wrapper">
+                      <mat-form-field appearance="fill" class="full-width modern-input">
+                        <mat-label>Código del Estudiante</mat-label>
+                        <input
+                          matInput
+                          formControlName="studentCode"
+                          placeholder="Ej: 2266301"
+                          maxlength="20"
+                          autocomplete="off"
+                          aria-describedby="student-hint"
+                          required
+                        />
+                        <mat-icon matPrefix class="input-icon" aria-hidden="true">badge</mat-icon>
+                        <mat-error *ngIf="loanForm.get('studentCode')?.hasError('required')">
+                          Código de estudiante requerido
+                        </mat-error>
+                      </mat-form-field>
+                      <span class="input-hint" id="student-hint">Código único del estudiante</span>
+                    </div>
+                  </div>
+
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    type="submit"
+                    [disabled]="isLoadingLoan || loanForm.invalid"
+                    class="create-button modern-button"
+                  >
+                    <span class="button-content">
+                      <mat-icon *ngIf="!isLoadingLoan" aria-hidden="true">add_circle</mat-icon>
+                      <mat-progress-spinner
+                        *ngIf="isLoadingLoan"
+                        diameter="20"
+                        mode="indeterminate"
+                        class="spinner"
+                      ></mat-progress-spinner>
+                      <span class="button-text">
+                        {{ isLoadingLoan ? "Registrando..." : "Registrar Préstamo" }}
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              </form>
+            </mat-card-content>
+          </mat-card>
+        </section>
+      </mat-tab>
+
+
+      <mat-tab label="Devolver Equipo">
+        <section aria-labelledby="return-loan-title">
+          <mat-card class="create-card glass-effect">
+            <mat-card-content>
+              <div class="card-title-section">
+                <div class="title-icon" aria-hidden="true">
+                  <mat-icon>keyboard_return</mat-icon>
+                </div>
+                <div class="title-text">
+                  <h2 id="return-loan-title">Devolver Equipo</h2>
+                  <p>Registre la devolución de un equipo prestado</p>
+                </div>
+              </div>
+
+              <form [formGroup]="returnForm" (ngSubmit)="onReturnLoan()" role="form">
+                <div class="create-form">
+                  <div class="form-grid">
+                    <div class="input-wrapper">
+                      <mat-form-field appearance="fill" class="full-width modern-input">
+                        <mat-label>ID del Préstamo</mat-label>
+                        <input
+                          matInput
+                          formControlName="loanId"
+                          placeholder="Ej: 001"
+                          type="text"
+                          min="1"
+                          autocomplete="off"
+                          aria-describedby="loanid-hint"
+                          required
+                        />
+                        <mat-icon matPrefix class="input-icon" aria-hidden="true">receipt</mat-icon>
+                        <mat-error *ngIf="returnForm.get('loanId')?.hasError('required')">
+                          ID del préstamo requerido
+                        </mat-error>
+                      </mat-form-field>
+                      <span class="input-hint" id="loanid-hint">Número de identificación del préstamo</span>
+                    </div>
+                  </div>
+
+                  <button
+                    mat-raised-button
+                    color="accent"
+                    type="submit"
+                    [disabled]="isLoadingReturn || returnForm.invalid"
+                    class="create-button modern-button"
+                  >
+                    <span class="button-content">
+                      <mat-icon *ngIf="!isLoadingReturn" aria-hidden="true">check_circle</mat-icon>
+                      <mat-progress-spinner
+                        *ngIf="isLoadingReturn"
+                        diameter="20"
+                        mode="indeterminate"
+                        class="spinner"
+                      ></mat-progress-spinner>
+                      <span class="button-text">
+                        {{ isLoadingReturn ? "Procesando..." : "Registrar Devolución" }}
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              </form>
+            </mat-card-content>
+          </mat-card>
+        </section>
+      </mat-tab>
+
+
+      <mat-tab label="Préstamos Activos">
+        <section aria-labelledby="active-loans-title">
+          <mat-card class="list-card glass-effect">
+            <mat-card-content>
+              <div class="card-title-section">
+                <div class="title-icon" aria-hidden="true">
+                  <mat-icon>list</mat-icon>
+                </div>
+                <div class="title-text">
+                  <h2 id="active-loans-title">Préstamos Activos</h2>
+                  <p>Lista de todos los préstamos activos en el sistema</p>
+                </div>
+              </div>
+
+              <div class="table-container">
+                <div *ngIf="isLoadingLoans" class="loading-container">
+                  <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+                  <p>Cargando préstamos...</p>
+                </div>
+
+                <table mat-table [dataSource]="activeLoans" *ngIf="!isLoadingLoans && activeLoans.length > 0" 
+                       class="loan-table">
+                  
+                  <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef>ID</th>
+                    <td mat-cell *matCellDef="let loan">#{{ loan.id }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="equipment">
+                    <th mat-header-cell *matHeaderCellDef>Equipo</th>
+                    <td mat-cell *matCellDef="let loan">
+                      <div class="equipment-info">
+                        <strong>{{ loan.equipmentName }}</strong>
+                        <small>{{ loan.barcode }}</small>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="student">
+                    <th mat-header-cell *matHeaderCellDef>Estudiante</th>
+                    <td mat-cell *matCellDef="let loan">{{ loan.studentName }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="monitor">
+                    <th mat-header-cell *matHeaderCellDef>Monitor</th>
+                    <td mat-cell *matCellDef="let loan">{{ loan.monitorName }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="loanDate">
+                    <th mat-header-cell *matHeaderCellDef>Fecha Préstamo</th>
+                    <td mat-cell *matCellDef="let loan">{{ formatDate(loan.loanDateTime) }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                    <td mat-cell *matCellDef="let loan">
+                      <button
+                        mat-stroked-button
+                        color="accent"
+                        (click)="returnLoanFromTable(loan.id)"
+                        [disabled]="isLoadingReturn"
+                        class="action-button"
+                      >
+                        <mat-icon>keyboard_return</mat-icon>
+                        Devolver
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+
+                <div *ngIf="!isLoadingLoans && activeLoans.length === 0" class="no-data">
+                  <mat-icon>inventory_2</mat-icon>
+                  <p>No hay préstamos activos</p>
+                  <small>Comience registrando un nuevo préstamo</small>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </section>
+      </mat-tab>
+
+      
+      <mat-tab label="Mis Préstamos">
+        <section aria-labelledby="my-loans-title">
+          <mat-card class="list-card glass-effect">
+            <mat-card-content>
+              <div class="card-title-section">
+                <div class="title-icon" aria-hidden="true">
+                  <mat-icon>person</mat-icon>
+                </div>
+                <div class="title-text">
+                  <h2 id="my-loans-title">Mis Préstamos Activos</h2>
+                  <p>Equipos que tienes actualmente en préstamo</p>
+                </div>
+              </div>
+
+              <div class="table-container">
+                <table mat-table [dataSource]="myActiveLoans" *ngIf="myActiveLoans.length > 0" 
+                       class="loan-table">
+                  
+                  <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef>ID</th>
+                    <td mat-cell *matCellDef="let loan">#{{ loan.id }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="equipment">
+                    <th mat-header-cell *matHeaderCellDef>Equipo</th>
+                    <td mat-cell *matCellDef="let loan">
+                      <div class="equipment-info">
+                        <strong>{{ loan.equipmentName }}</strong>
+                        <small>{{ loan.barcode }}</small>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="loanDate">
+                    <th mat-header-cell *matHeaderCellDef>Fecha Préstamo</th>
+                    <td mat-cell *matCellDef="let loan">{{ formatDate(loan.loanDateTime) }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>Estado</th>
+                    <td mat-cell *matCellDef="let loan">
+                      <span class="status-badge status-active">
+                        {{ loan.status === 'ACTIVE' ? 'Activo' : 'Devuelto' }}
+                      </span>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="myLoansDisplayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: myLoansDisplayedColumns;"></tr>
+                </table>
+
+                <div *ngIf="myActiveLoans.length === 0" class="no-data">
+                  <mat-icon>inventory_2</mat-icon>
+                  <p>No tienes préstamos activos</p>
+                  <small>Los préstamos que realices aparecerán aquí</small>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </section>
+      </mat-tab>
+    </mat-tab-group>
+  </main>
+</div>

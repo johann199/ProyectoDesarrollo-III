@@ -1,0 +1,72 @@
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-section">
+      <div class="footer-brand">
+        <mat-icon class="footer-logo">gps_fixed</mat-icon>
+        <h3>GPS System</h3>
+        <p>Sistema de gestión y monitoreo GPS para vehículos</p>
+      </div>
+    </div>
+
+    <div class="footer-section">
+      <h4>Enlaces Rápidos</h4>
+      <ul class="footer-links">
+        <li *ngFor="let link of quickLinks">
+          <a [routerLink]="link.route">{{ link.label }}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>Empresa</h4>
+      <ul class="footer-links">
+        <li *ngFor="let link of companyLinks">
+          <a [routerLink]="link.route">{{ link.label }}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h4>Contacto</h4>
+      <div class="contact-info">
+        <div class="contact-item">
+          <mat-icon>email</mat-icon>
+          <span>contacto&#64;gpssystem.com</span>
+        </div>
+        <div class="contact-item">
+          <mat-icon>phone</mat-icon>
+          <span>+1 (555) 123-4567</span>
+        </div>
+        <div class="contact-item">
+          <mat-icon>location_on</mat-icon>
+          <span>Ciudad, País</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-section">
+      <h4>Síguenos</h4>
+      <div class="social-links">
+        <a 
+          *ngFor="let social of socialLinks" 
+          [href]="social.url" 
+          [attr.aria-label]="social.label"
+          class="social-link"
+        >
+          <mat-icon>{{ social.icon }}</mat-icon>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-bottom-content">
+      <p>&copy; {{ currentYear }} GPS System. Todos los derechos reservados.</p>
+      <div class="footer-bottom-links">
+        <a routerLink="/privacy">Privacidad</a>
+        <a routerLink="/terms">Términos</a>
+        <a routerLink="/cookies">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
